@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export default function Formful({ onAdd }){
+export default function Formful({ onAdd }) {
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
   const [type, setType] = useState('expense')

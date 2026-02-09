@@ -1,20 +1,20 @@
 export default function Listful({ transactions, onDelete }) {
-  return(
+  return (
     <div className="bg-white p-6 rounded-lg shadow">
       <h2 className="text-2xl font-bold mb-4">Transactions</h2>
-      {transactions.lenght === 0 ? (
+      {transactions.length === 0 ? (
         <p className="text-gray-500">No transactions yet</p>
-      ): (
-      <ul className="space-7-2">
+      ) : (
+      <ul className="space-y-2">
       {transactions.map((t) => (
       <li
         key={t.id}
-        className="flex justify-between items-center board-b pb-2"
+        className="flex justify-between items-center border-b pb-2"
         >
          <div>
           <span className="font-semibold">{t.description}</span>
           <span className="text-sm text-gray-500 ml-2">
-            {new date(t.date).toLocaleString()}
+            {new Date(t.date).toLocaleDateString()}
           </span>
           </div>
           <div className="flex items-center gap-4">
