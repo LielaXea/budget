@@ -1,25 +1,39 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-export default function Formful({ onAdd }) {
+export default function Formful({ onAdd, editingTransaction, onUpdate }) {
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
-  const [type, setType] = useState('expense')
+  const [type, setType] = useState('expense')  
+  useEffect(() => {
+    if (editingTransaction){
+      setDescription(editingTransaction.description)
+      setAmount(editingTransaction.amount)
+      setType(editingTransaction.type)
+    }
+  },[editingTransaction])
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    onAdd({
+    const data = {
       description,
       amount: parseFloat(amount),
       type,
       date: new Date().toISOString()
-    })
+    }
+
+    if (editingTransaction) {
+      onUpdate(editingTransaction.id, data)
+    } else {
+      onAdd({...data, id: Date.now()})
+    }
     setDescription('')
     setAmount('')
   }
+
   
   return (
   <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow mb-8">
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
       <input
       type="text"
       placeholder="Description"
@@ -49,7 +63,7 @@ export default function Formful({ onAdd }) {
       type="submit"
       className="mt-4 bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
       >
-        Add Transaction
+        {editingTransaction ? 'Update' : ' Add'} Transaction
       </button>
       </form>
   )

@@ -1,4 +1,4 @@
-export default function Listful({ transactions, onDelete }) {
+export default function Listful({ transactions, onDelete, onEdit }) {
   return (
     <div className="bg-white p-6 rounded-lg shadow">
       <h2 className="text-2xl font-bold mb-4">Transactions</h2>
@@ -26,6 +26,12 @@ export default function Listful({ transactions, onDelete }) {
               className="text-red-500 hover:text-red-700"
               >
                 Delete
+                </button>
+            <button 
+              onClick={() => onEdit(t)}
+              className="text-blue-500 hover:text-blue-700"
+              >
+                Edit
                 </button>
           </div>
         </li>
