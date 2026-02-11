@@ -1,16 +1,27 @@
 import { useState, useEffect } from 'react'
 
-export default function Formful({ onAdd, editingTransaction, onUpdate }) {
+export default function Formful({ onAdd, editingTransaction, onUpdate, incomeCategories, expenseCategories }) {
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
-  const [type, setType] = useState('expense')  
+  const [type, setType] = useState('expense')
+  const [categoryId, setCategoryId] = useState('')
+
+  const currentCategories = type === 'income' ? incomeCategories : expenseCategories
+
   useEffect(() => {
     if (editingTransaction){
       setDescription(editingTransaction.description)
       setAmount(editingTransaction.amount)
       setType(editingTransaction.type)
+      setCategoryId(editingTransaction.categoryId)
     }
   },[editingTransaction])
+
+  useEffect(() => {
+    if (!editingTransaction) {
+      setCategoryId(currentCategories[0]?.id || '')
+    }
+  }, [type, currentCategories, editingTransaction])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -18,6 +29,7 @@ export default function Formful({ onAdd, editingTransaction, onUpdate }) {
       description,
       amount: parseFloat(amount),
       type,
+      categoryId: parseInt(categoryId),
       date: new Date().toISOString()
     }
 
@@ -28,12 +40,23 @@ export default function Formful({ onAdd, editingTransaction, onUpdate }) {
     }
     setDescription('')
     setAmount('')
+    setType('expense')
+    setCategoryId(expenseCategories[0]?.id || '')
   }
 
   
   return (
   <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow mb-8">
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols4 gap-3">
+      <select 
+      value={type}
+      onChange={(e) => setType(e.target.value)}
+      className="border p-2 rounded font-semibold"
+      >
+        <option value="expense">💸 Expense</option>
+        <option value="income">💰 Income</option>
+      </select>
+
       <input
       type="text"
       placeholder="Description"
@@ -42,21 +65,29 @@ export default function Formful({ onAdd, editingTransaction, onUpdate }) {
       className="border p-2 rounded"
       required
       />
+
       <input 
       type="number"
       placeholder="Amount"
+      step="0.01"
       value={amount}
       onChange={(e) => setAmount(e.target.value)}
       className="border p-2 rounded"
       required
       />
-      <select 
-      value={type}
-      onChange={(e) => setType(e.target.value)}
-      className="border p-2 rounded"
+
+      <select
+        value={categoryId}
+        onChange={(e) => setCategoryId(e.target.value)}
+        className="border p-2 rounded"
+        required
       >
-        <option value="income">Income</option>
-        <option value="expense">Expense</option>
+        <option value="">Select Category</option>
+        {currentCategories.map((cat) => (
+          <option key={cat.id} value={cat.id}>
+            {cat.name}
+          </option>
+        ))}
       </select>
       </div>
       <button 
