@@ -4,6 +4,7 @@ import Listful from './stuffing/list'
 import Dashful from './stuffing/dash'
 import Filterful from './stuffing/filters'
 import Categoriful from './stuffing/categories'
+import Analysisful from './stuffing/analysis'
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
   const [editingId, setEditingId] = useState(null)
 
   const [showCategoryManager, setShowCategoryManager] = useState(false)
+  const [showAnalytics, setShowAnalytics] = useState(false)
 
   const allCategories = [...incomeCategories, ...expenseCategories]
 
@@ -94,14 +96,29 @@ function App() {
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold">Budgetium Trackius</h1>
-          <button
-            onClick={() => setShowCategoryManager(!showCategoryManager)}
-            className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600"
-          >
-            {showCategoryManager ? 'Hide' : 'Manage'} Categories
-          </button>
+          <h1 className="text-4xl font-bold">Budgie</h1>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowAnalytics(!showAnalytics)}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >
+              {showAnalytics ? 'Hide' : 'Show'} Analytics 📊
+            </button>
+            <button
+              onClick={() => setShowCategoryManager(!showCategoryManager)}
+              className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600"
+            >
+              {showCategoryManager ? 'Hide' : 'Manage'} Categories 
+            </button>
+          </div>
         </div>
+
+        {showAnalytics && (
+          <Analysisful
+            transactions={transactions}
+            allCategories={allCategories}
+          />
+        )}
 
         {showCategoryManager && (
           <Categoriful
